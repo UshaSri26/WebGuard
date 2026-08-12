@@ -55,4 +55,18 @@ public class LoginTest extends BaseTest {
         loginPage.login("admin", "");
         Assert.assertEquals(loginPage.getMessageText(), "Password is required");
     }
+
+    @Test(description = "Intentionally failing test case to verify screenshot capture in reports")
+    public void testFailedLoginVerificationForScreenshots() {
+        openUrl(getProperty("baseUrl"));
+        LoginPage loginPage = new LoginPage();
+        
+        // Input wrong credentials and attempt login
+        loginPage.login("admin", "wrongpassword_intentional");
+        
+        // We assert that dashboard welcome message is displayed, which will fail (and trigger a screenshot)
+        HomePage homePage = new HomePage();
+        Assert.assertTrue(homePage.isWelcomeMessageDisplayed(), 
+                "Intentional Failure: Dashboard welcome message should have been displayed but wasn't.");
+    }
 }
