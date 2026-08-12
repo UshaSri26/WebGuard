@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGuard Portal - Registration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Create Account</h2>
+        <p class="subtitle">Join our secure platform today</p>
+
+        <!-- Message Alerts -->
+        <div id="messageBox" class="message"></div>
+
+        <form id="registerForm" onsubmit="handleRegistration(event)">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" placeholder="Enter full name">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="Enter email address">
+            </div>
+
+            <div class="form-group">
+                <label for="username">Choose Username</label>
+                <input type="text" id="username" placeholder="Enter username">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Create password">
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" placeholder="Confirm password">
+            </div>
+
+            <button type="submit" id="registerBtn" class="btn">Register</button>
+        </form>
+
+        <div class="footer-links" style="justify-content: center;">
+            <span style="color: #94a3b8; margin-right: 8px;">Already have an account?</span>
+            <a href="index.html" id="loginLink">Sign In</a>
+        </div>
+    </div>
+
+    <script>
+        function handleRegistration(event) {
+            event.preventDefault();
+            
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            const messageBox = document.getElementById('messageBox');
+
+            if (!fullName || !email || !username || !password || !confirmPassword) {
+                messageBox.className = "message error";
+                messageBox.innerText = "All fields are required";
+                messageBox.style.display = "block";
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                messageBox.className = "message error";
+                messageBox.innerText = "Passwords do not match";
+                messageBox.style.display = "block";
+                return;
+            }
+
+            if (password.length < 6) {
+                messageBox.className = "message error";
+                messageBox.innerText = "Password must be at least 6 characters long";
+                messageBox.style.display = "block";
+                return;
+            }
+
+            // Save to localStorage
+            let registeredUsers = JSON.parse(localStorage.getItem('users')) || {};
+            
+            if (registeredUsers[username] || username === "admin" || username === "testuser" || username === "john_doe") {
+                messageBox.className = "message error";
+                messageBox.innerText = "Username is already taken";
+                messageBox.style.display = "block";
+                return;
+            }
+
+            registeredUsers[username] = password;
+            localStorage.setItem('users', JSON.stringify(registeredUsers));
+
+            // Redirect back with message
+            localStorage.setItem('regSuccess', "Registration successful! You can now log in.");
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>

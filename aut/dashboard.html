@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGuard Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div>
+                <h2 id="dashboardTitle">WebGuard Security Panel</h2>
+                <p style="color: #94a3b8; font-size: 0.9rem;">Command center for system shields and endpoints</p>
+            </div>
+            <div class="user-info">
+                <div class="avatar" id="userAvatar">U</div>
+                <div>
+                    <div style="font-weight: 600;" id="welcomeUser">Welcome, User</div>
+                    <a href="#" id="logoutBtn" onclick="handleLogout()" style="color: #ef4444; font-size: 0.85rem; text-decoration: none;">Sign Out</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="searchField" placeholder="Search security assets by name, type, or status...">
+            <button id="searchBtn" class="btn" onclick="performSearch()">Search</button>
+        </div>
+
+        <div class="table-container">
+            <table id="assetsTable">
+                <thead>
+                    <tr>
+                        <th>Asset Name</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Risk Score</th>
+                    </tr>
+                </thead>
+                <tbody id="assetsBody">
+                    <tr>
+                        <td>Network Firewall</td>
+                        <td>Gateway Security</td>
+                        <td><span class="status-badge active">Active</span></td>
+                        <td>Low (1.2)</td>
+                    </tr>
+                    <tr>
+                        <td>Endpoint Shield</td>
+                        <td>Host Security</td>
+                        <td><span class="status-badge active">Active</span></td>
+                        <td>Low (0.8)</td>
+                    </tr>
+                    <tr>
+                        <td>Database Encryptor</td>
+                        <td>Data Protection</td>
+                        <td><span class="status-badge pending">Pending</span></td>
+                        <td>Medium (4.5)</td>
+                    </tr>
+                    <tr>
+                        <td>Vulnerability Scanner</td>
+                        <td>System Auditing</td>
+                        <td><span class="status-badge active">Active</span></td>
+                        <td>Low (2.0)</td>
+                    </tr>
+                    <tr>
+                        <td>API Security Gate</td>
+                        <td>Microservice Guard</td>
+                        <td><span class="status-badge pending">Pending</span></td>
+                        <td>High (7.2)</td>
+                    </tr>
+                    <tr>
+                        <td>Cloud Sentinel</td>
+                        <td>Infrastructure</td>
+                        <td><span class="status-badge active">Active</span></td>
+                        <td>Low (1.5)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="noResults" style="padding: 30px; text-align: center; color: #94a3b8; display: none;">
+                No matching security assets found.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check session
+        window.onload = function() {
+            const user = localStorage.getItem('sessionUser') || 'Guest';
+            document.getElementById('welcomeUser').innerText = "Welcome, " + user;
+            document.getElementById('userAvatar').innerText = user.charAt(0).toUpperCase();
+        };
+
+        function performSearch() {
+            const query = document.getElementById('searchField').value.toLowerCase().trim();
+            const rows = document.querySelectorAll('#assetsBody tr');
+            const noResults = document.getElementById('noResults');
+            let matchCount = 0;
+
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    row.style.display = "";
+                    matchCount++;
+                } else {
+                    row.style.display = "none";
+                }
+            });
+
+            if (matchCount === 0) {
+                noResults.style.display = "block";
+            } else {
+                noResults.style.display = "none";
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('sessionUser');
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>

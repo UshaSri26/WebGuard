@@ -1,0 +1,33 @@
+# Maven
+target/
+*.releaseBackup
+pom.xml.releaseBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# IDEs
+.idea/
+*.iml
+*.iws
+.settings/
+.classpath
+.project
+.metadata/
+.bin/
+tmp/
+.factorypath
+bin/
+out/
+
+# Reports and logs
+reports/
+*.log
+
+# WebDriver binaries and local configs
+.webdrivers/
+.selenium/
+test-output/

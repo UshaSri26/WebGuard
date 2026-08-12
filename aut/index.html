@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGuard Portal - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>WebGuard Secure Portal</h2>
+        <p class="subtitle">Please sign in to access your dashboard</p>
+
+        <!-- Message Alerts -->
+        <div id="messageBox" class="message"></div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter username" autocomplete="username">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter password" autocomplete="current-password">
+            </div>
+
+            <button type="submit" id="loginBtn" class="btn">Sign In</button>
+        </form>
+
+        <div class="footer-links">
+            <a href="forgot.html" id="forgotPasswordLink">Forgot Password?</a>
+            <a href="register.html" id="registerLink">Register Account</a>
+        </div>
+    </div>
+
+    <script>
+        // Check if there's a registration success message in URL or localStorage
+        window.onload = function() {
+            const regSuccess = localStorage.getItem('regSuccess');
+            if (regSuccess) {
+                const messageBox = document.getElementById('messageBox');
+                messageBox.className = "message success";
+                messageBox.innerText = regSuccess;
+                messageBox.style.display = "block";
+                localStorage.removeItem('regSuccess');
+            }
+        };
+
+        const validCredentials = {
+            "admin": "admin123",
+            "testuser": "password123",
+            "john_doe": "securePass99"
+        };
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const usernameInput = document.getElementById('username').value.trim();
+            const passwordInput = document.getElementById('password').value;
+            const messageBox = document.getElementById('messageBox');
+
+            if (!usernameInput) {
+                messageBox.className = "message error";
+                messageBox.innerText = "Username is required";
+                messageBox.style.display = "block";
+                return;
+            }
+
+            if (!passwordInput) {
+                messageBox.className = "message error";
+                messageBox.innerText = "Password is required";
+                messageBox.style.display = "block";
+                return;
+            }
+
+            // Check database of users (including any newly registered in localStorage)
+            let registeredUsers = JSON.parse(localStorage.getItem('users')) || {};
+            
+            const expectedPassword = validCredentials[usernameInput] || registeredUsers[usernameInput];
+
+            if (expectedPassword && expectedPassword === passwordInput) {
+                messageBox.className = "message success";
+                messageBox.innerText = "Login successful! Redirecting...";
+                messageBox.style.display = "block";
+                
+                // Store active session
+                localStorage.setItem('sessionUser', usernameInput);
+                
+                setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                }, 800);
+            } else {
+                messageBox.className = "message error";
+                messageBox.innerText = "Invalid username or password";
+                messageBox.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>
